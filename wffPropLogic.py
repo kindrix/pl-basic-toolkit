@@ -5,7 +5,7 @@
 # Email: kindrix@gmail.com
 #
 #Module to check if a given sentence is a well formed forumal (wff) of propostional logic
-#The program is based on the idea of using difference lists used for DCG in Prolog. More information can 
+#The program is based on the idea of using difference lists used for DCG in Prolog (It may be used in in other languages as well.) More information can 
 #be found at http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse28.
 
 #The following are the wff rules that I've used:
