@@ -136,7 +136,19 @@ def consume_closing_bracket(symList):
 def consume_operator(symList):
 	if (len(symList) == 0):
 		return 0, symList
-	if ( symList[0] in ['&', '|', '>'] ):
+	#and, or
+	if ( symList[0] in ['&', '|']  ):
+		symList.remove(symList[0])
+		return 1, symList
+	#implication
+	elif (symList[0] == '-' and symList[1] == '>'):
+		symList.remove(symList[0])
+		symList.remove(symList[0])
+		return 1, symList
+	#biconditional
+	elif (symList[0] == '<' and symList[1] == '-' and symList[2] == '>'):
+		symList.remove(symList[0])
+		symList.remove(symList[0])
 		symList.remove(symList[0])
 		return 1, symList
 	return 0, symList
