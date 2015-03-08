@@ -38,25 +38,27 @@ def stringToCharList(exp):
 
 # recursive definition of a wff
 
-def consume_formula(symList, depth):
+def consume_formula(symList, depth, parseTree):
 	#symListCopy = list(symList)
 	#print 'current list:', symList
 
 	#cosume an atom
 	#formula: atom
 
-	is_atom, symList = consume_atom(symList)
+	is_atom, symList, atom = consume_atom(symList)
 	if is_atom:
+		parseTree.append((depth, atom))
 		return 1, symList, depth
 
 
 	#consume negation followed by formula
 	#formula: ~ formula
 
-	is_negation, symList = consume_negation(symList)
+	is_negation, symList, negation = consume_negation(symList)
 	if is_negation:
-		is_formula, symList, depth = consume_formula(symList, depth)
-		if is_formula:
+		parseTree.append((depth, negation))
+		is_formula, symList, depth = consume_formula(symList, depth + 1, parseTree)
+		if is_formula:			
 			return 1, symList, depth
 
 
@@ -65,12 +67,13 @@ def consume_formula(symList, depth):
 
 	is_open_bracket, symList = consume_open_bracket(symList)
 	if is_open_bracket:
-		depth += 1
-		is_formula, symList, depth = consume_formula(symList, depth)
+		tempDepth = depth
+		is_formula, symList, depth = consume_formula(symList, depth + 1, parseTree)
 		if is_formula:
-			is_operator, symList = consume_operator(symList)
+			is_operator, symList, operator = consume_operator(symList)
 			if is_operator:
-				is_formula, symList, depth = consume_formula(symList, depth)
+				parseTree.append((tempDepth, operator))
+				is_formula, symList, depth = consume_formula(symList, tempDepth + 1, parseTree)
 				if is_formula:
 					is_closing_bracket, symList = consume_closing_bracket(symList)
 					if is_closing_bracket:
@@ -95,21 +98,23 @@ def consume_formula(symList, depth):
 
 def consume_atom(symList):
 	if (len(symList) == 0):
-		return 0, symList
+		return 0, symList, None
 	if ( symList[0].isalpha() ):
+		atom = symList[0]
 		symList.remove(symList[0])
-		return 1, symList
-	return 0, symList
+		return 1, symList, atom
+	return 0, symList, None
 
 # consume negation symbol and return remaining list
 
 def consume_negation(symList):
 	if (len(symList) == 0):
-		return 0, symList
+		return 0, symList, None
 	if ( symList[0] == '~' ):
+		negation = symList[0]
 		symList.remove(symList[0])
-		return 1, symList
-	return 0, symList
+		return 1, symList, negation
+	return 0, symList, None
 
 
 # consume an open bracket '(' and return remaining list
@@ -136,23 +141,26 @@ def consume_closing_bracket(symList):
 
 def consume_operator(symList):
 	if (len(symList) == 0):
-		return 0, symList
+		return 0, symList, None
 	#and, or
 	if ( symList[0] in ['&', '|']  ):
+		operator = symList[0]
 		symList.remove(symList[0])
-		return 1, symList
+		return 1, symList, operator
 	#implication
 	elif (symList[0] == '-' and symList[1] == '>'):
+		operator = symList[0] + symList[1]
 		symList.remove(symList[0])
 		symList.remove(symList[0])
-		return 1, symList
+		return 1, symList, operator
 	#biconditional
 	elif (symList[0] == '<' and symList[1] == '-' and symList[2] == '>'):
+		operator = symList[0] + symList[1] + symList[3]
 		symList.remove(symList[0])
 		symList.remove(symList[0])
 		symList.remove(symList[0])
-		return 1, symList
-	return 0, symList
+		return 1, symList, operator
+	return 0, symList, None
 
 
 #main function to check if formula is valid
@@ -160,10 +168,12 @@ def consume_operator(symList):
 
 def checkValidFormula(symList):
 	startDepth = 0
-	is_formula, symList, depth = consume_formula(symList, startDepth)
+	parseTree = []
+	is_formula, symList, depth = consume_formula(symList, startDepth, parseTree)
 	print 'Final after consumption:', symList
 	if (is_formula and len(symList) == 0):
 		print "Depth is: ", depth
+		print "Parse Tree: \n", parseTree
 		return 1
 	return 0
 
