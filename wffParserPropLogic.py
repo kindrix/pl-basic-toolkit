@@ -67,16 +67,20 @@ def consume_formula(symList, depth, parseTree):
 
 	is_open_bracket, symList = consume_open_bracket(symList)
 	if is_open_bracket:
-		tempDepth = depth
-		is_formula, symList, depth = consume_formula(symList, depth + 1, parseTree)
+		currentDepth = depth
+		is_formula, symList, leftDepth = consume_formula(symList, depth + 1, parseTree)
 		if is_formula:
 			is_operator, symList, operator = consume_operator(symList)
 			if is_operator:
-				parseTree.append((tempDepth, operator))
-				is_formula, symList, depth = consume_formula(symList, tempDepth + 1, parseTree)
+				parseTree.append((currentDepth, operator))
+				is_formula, symList, rightDepth = consume_formula(symList, currentDepth + 1, parseTree)
 				if is_formula:
 					is_closing_bracket, symList = consume_closing_bracket(symList)
 					if is_closing_bracket:
+						if (leftDepth > rightDepth):
+							depth =  leftDepth
+						else:
+							depth = rightDepth
 						return 1, symList, depth
 	# 				else:
 	# 					return 0, symList
