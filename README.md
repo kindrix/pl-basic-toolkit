@@ -1,5 +1,26 @@
 # pl-basic-toolkit
-Some tools for propositional logic that includes a wff checker, a parse tree builder and a model builder.
+Some tools for propositional logic that includes a wff checker, a parse tree builder and a model builder. 
+
+There are 5 files:
+
+1) parser.py
+2) ttable.py (depends on parser.py and worlds.py)
+3) wff.py
+4) worlds.py
+5) starter.py (depends on parser.py and ttable.py)
+
+The wff.py file checks if a sentence is a valid wff.
+
+The parser.py file is the same as the wff.py file but also builds a parse tree of the
+sentence.
+
+The worlds.py generates the possible worlds given the alphabet of the language.
+
+The ttable.py builds the truth table given a parse tree and the set of possible worlds.
+
+Note: The wff.py is redundant as its functionlaity is covered by parser.py.
+
+-----------------------------------------------------------------------------
 
 Start with the starter.py.
 
