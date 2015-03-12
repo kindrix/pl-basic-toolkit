@@ -7,20 +7,17 @@
 
    The main function is get_poss_worlds(alphabet).
 
- Usage Example:
+Usage Example:
 
  	>>> worlds.get_poss_worlds(['a','b'])
 	[{'a': 0, 'b': 0}, {'a': 0, 'b': 1}, {'a': 1, 'b': 0}, {'a': 1, 'b': 1}]
 
 	In the output above, 0 denotes false and 1 denotes true.
 
+Author:
+	kinzang chhogyal (kindrix@gmail.com)
+
 '''
-
-#-------------------------------------------------------------------------------------------#
-#Generate possible worlds from alphabet
-#author: kinzang chhogyal (kindrix@gmail.com)
-#-------------------------------------------------------------------------------------------#
-
 
 #-------------------------------------------------------------------------------------------#
 
