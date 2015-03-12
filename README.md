@@ -4,9 +4,13 @@ Some tools for propositional logic that includes a wff checker, a parse tree bui
 There are 5 files:
 
 1) parser.py
+
 2) ttable.py (depends on parser.py and worlds.py)
+
 3) wff.py
+
 4) worlds.py
+
 5) starter.py (depends on parser.py and ttable.py)
 
 The wff.py file checks if a sentence is a valid wff.
@@ -17,6 +21,8 @@ sentence.
 The worlds.py generates the possible worlds given the alphabet of the language.
 
 The ttable.py builds the truth table given a parse tree and the set of possible worlds.
+
+The starter.py file is just there to demonstrate how the other modules are to be used.
 
 Note: The wff.py is redundant as its functionlaity is covered by parser.py.
 
