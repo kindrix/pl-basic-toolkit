@@ -1,16 +1,22 @@
 #!/usr/bin/python
+'''
+Starter file to test wff-pl-module.
+
+Author:
+	kinzang chhogyal (kindrix@gmail.com)
+'''
 
 #import wffModule
 
-import parseTreePL
-import getTruthTable
+import parser
+import ttable
 
 
 #-------------------------------------------------------------------------------------------#
 # find alphabet given formula
 #-------------------------------------------------------------------------------------------#
 
-def getAlphabet(symList):
+def get_alphabet(symList):
 
 	alphabet =[]
 
@@ -20,10 +26,10 @@ def getAlphabet(symList):
 
 	return alphabet
 
-#functin displayTruthTable
+#functin show_truth_table
 
-def displayTruthTable(alphabet, sentence, possibleWorldsTable, truthValues):
-	print '\nTruth Table \n'
+def show_truth_table(alphabet, sentence, possibleWorldsTable, truthValues):
+	print '\n-- Truth Table -- \n'
 	for item in alphabet:
 		print item, ' | ',  
 	print sentence,
@@ -42,43 +48,30 @@ def displayTruthTable(alphabet, sentence, possibleWorldsTable, truthValues):
 exp = raw_input('Enter sentence: ')
 
 #check if exp is wff and return parse tree
-parserResult = parseTreePL.parseWFF(exp)
-
-
+parserResult = parser.parse_wff(exp)
 
 if (parserResult[0]):
 
 	#get alphabet
-	alphabet = list(getAlphabet(parserResult[3]))
+	alphabet = list(get_alphabet(parserResult[3]))
 	alphabet.sort()
 
-	ttResult = getTruthTable.getTruthTable(parserResult, alphabet)
+	#generate possible worlds and get truth table
+
+	ttResult = ttable.get_truth_table(parserResult[3], alphabet)
 	truthValues = ttResult[1]
 	possibleWorldsTable = ttResult[0]
 	
+	print '\nAlphabet: ', alphabet
 
-	# #generate possible worlds
-	# possibleWorldsTable = generatePossibleWorlds.generatePossibleWorlds(alphabet)
+	print '\nInput as list: ', parserResult[4]
+	
+	print '\nParse Tree: ', parserResult[3]
 
-	# print '\nFormula is valid'
-	# print 'symlist: ', parserResult[1]
-	# print 'Max depth: ', parserResult[2]
-	# print 'Parse Tree: ', parserResult[3]
-	# print 'Sorted Parse Tree', sorted(parserResult[3])
-
-	# #evaluate truth value of formula using parse tree
-	# startDepth = 0
-	# truthValues =[]
-	# print '\n', possibleWorldsTable
-
-	# #for each possible world, evaluate formula
-	# for possibleWorld in possibleWorldsTable:
-	# 	#convert True to int
-	# 	isModel = int(evaluateParseTree(parserResult[3], startDepth, possibleWorld))
-	# 	truthValues.append(isModel)
+	print '\nMax depth of parse tree: ', parserResult[2]
 
 	# #display truth table
-	displayTruthTable(alphabet, ''.join(parserResult[4]), possibleWorldsTable, truthValues)
+	show_truth_table(alphabet, ''.join(parserResult[4]), possibleWorldsTable, truthValues)
 
 else:
 	print('Oops! Formula is not a wff.')

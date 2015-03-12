@@ -1,46 +1,67 @@
 #!/usr/bin/python
+'''Given a string, checks if it is wff and builds a parse tree.
+
+This module checks if an given expression is a well formed formula (wff) of propositional logic (PL)
+and it also returns a parse tree. Based on Prolog style definite clause grammar (DCG) implemented 
+used difference lists. To learn more about DCG and Prolog go to 
+http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse28.
+
+Propositional Logic Language:
+	A PL language consists of all sentences (formula) that can be generated from a set of 
+	alphabets (atoms) using the recursive rules below:
+
+	formula -> atom
+	formula -> ~ formula
+	formula -> (formula   operator  formula)
+	operator -> {&, |, ->, <->} 
+	atom -> {a, c, d, ...z, A .. Z}
+
+	Examples of valid and invalid formulas:
+	a : valid
+	~b : valYou can call it as follows:
+	check_wff()
+	~(c): invalid
+	~(c & d) : valid
+	(c & d :invalid
+	((c & d ) -> (b & ( e -> f)) ) : valid
+
+Usage Example:
+	The main funciton is called parse_wff(exp) which takes 1 argument which is a string.
+	The main function check_wff returns a tuple with 5 items. 
+
+	Ex.1 Valid wff
+	>>> a ='(a->(b&c))'
+	>>> parser.parse_wff(a)
+	(
+		1, 
+	 	[],
+	 	2,
+	 	[(1, 'a'), (0, '->'), (2, 'b'), (1, '&'), (2, 'c')],
+	 	['(', 'a', '-', '>', '(', 'b', '&', 'c', ')', ')']
+	)
+
+    Ex.2 Invalid wff
+    >>> a ='(a->b'
+	>>> parser.parse_wff(a)
+	(
+		0, 
+		[], 
+		0, 
+		[(1, 'a'), (0, '->'), (1, 'b')],
+		['(', 'a', '-', '>', 'b']
+	)
+
+Author:
+	kinzang chhogyal (kindrix@gmail.com)
+
+'''
+
 
 #-------------------------------------------------------------------------------------------#
-# Author: Kinzang Chhogyal
-# Email: kindrix@gmail.com
-#
-# Produces parse tree of a well formed formula of propositional logic.
-# Same as checkWFF.py except it also produces parse tree as a list of tuples.
-# Based on DCG in Prolog using difference lists.
-# More information about DCG and Prolog at 
-# http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse28.
 
+def str_to_char_list(exp):
+	'''Takes a string and return a list of chars after removing spaces. '''
 
-#The following are the wff rules that I've used:
-
-# formula : atom
-# formula : ~ formula
-# formula : (formula   operator  formula)
-# operator : {&, |, ->, <->} 
-# atom: a, c, d, ...z
-
-#Examples of valid and invalid formulas:
-# a : valid
-# ~b : valid
-# ~(c): invalid
-# ~(c & d) : valid
-# (c & d :invalid
-# ((c & d ) -> (b & ( e -> f)) ) : valid
-
-# The main function is called parseWFF(exp) and takes one argument 'exp'
-# which is a string representaion of a formula and it returns a tuple of four items:
-# 1) is_formula - true if valid wff
-# 2) remList - remaining list after consumption of atoms and connectives
-# 3) depth    - the max depth of the parse tree
-# 4) parseTree  - the parse tree
-
-#-------------------------------------------------------------------------------------------#
-
-
-#-------------------------------------------------------------------------------------------#
-#return list of chars and also remove spaces
-#-------------------------------------------------------------------------------------------#
-def stringToCharList(exp):
 	charList = []
 	for char in exp:
 		if (not(char == ' ')):
@@ -53,11 +74,23 @@ def stringToCharList(exp):
 #-------------------------------------------------------------------------------------------#
 
 def consume_formula(remList, depth, parseTree):
-	#remListCopy = list(remList)
-	#print 'current list:', remList
+	'''Recursive defintion of a valid formula (wff).
 
-	#cosume an atom
-	#formula: atom
+	Args:
+      remlist (list): List of symbols that make up sentence  (chars).
+      depth (int): Current depth of parse tree. Main connector of sentence has 
+      			   depth 0. Eg. In (a -> b), -> has depth 0. a and b have depth 1.
+      parseTree (list of tuples): First item of tuple is depth, second item is symbol.
+
+    Returns:
+      bool: True if wff, False otherwise.
+      list: Remainder list after consumption according to grammar rules.
+      int:  Maximum depth of parse tree.
+
+	'''
+	
+	#Cosume an atom and return remainder.
+	#Rule: formula -> atom.
 
 	is_atom, remList, atom = consume_atom(remList)
 	if is_atom:
@@ -65,8 +98,8 @@ def consume_formula(remList, depth, parseTree):
 		return 1, remList, depth
 
 
-	#consume negation followed by formula
-	#formula: ~ formula
+	#Consume negation followed by formula and return remainder.
+	#Rule: formula -> ~ formula.
 
 	is_negation, remList, negation = consume_negation(remList)
 	if is_negation:
@@ -76,33 +109,54 @@ def consume_formula(remList, depth, parseTree):
 			return 1, remList, depth
 
 
-	#consume an opening bracket followed by a formula, operator and a closing bracket
-	#formula: (formula operator formula)
+	#Consume an opening bracket followed by a formula, operator and a closing bracket.
+	#Rule: formula -> (formula operator formula).
 
 	is_open_bracket, remList = consume_open_bracket(remList)
 	if is_open_bracket:
-		currentDepth = depth
+		currentDepth = depth #Copy made for right branch of prase tree.
+
+		#Check left branch is wff and increase depth by 1.
 		is_formula, remList, leftDepth = consume_formula(remList, depth + 1, parseTree)
+
 		if is_formula:
 			is_operator, remList, operator = consume_operator(remList)
 			if is_operator:
 				parseTree.append((currentDepth, operator))
+
+				#Check right branch is wff and use the copy of depth (currentDept).
 				is_formula, remList, rightDepth = consume_formula(remList, currentDepth + 1, parseTree)
+				
 				if is_formula:
 					is_closing_bracket, remList = consume_closing_bracket(remList)
 					if is_closing_bracket:
+
+						#Compare left and right branch to find max depth.
 						if (leftDepth > rightDepth):
 							depth =  leftDepth
 						else:
 							depth = rightDepth
 						return 1, remList, depth
-	#all rules fails
+	#If all rules fails
 	return 0, remList, depth
 
+#-------------------------------------------------------------------------------------------#
 
 # consume an atom and return remaining list
 
 def consume_atom(remList):
+	'''Consume atom.
+
+	Args:
+      remlist (list): List of symbols that make up sentence  (chars).
+
+    Returns:
+      bool: True if atom, False otherwise.
+      list: Remainder list after consuming atom.
+      char: The atom consumed to build parse tree.
+
+	'''
+
 	if (len(remList) == 0):
 		return 0, remList, None
 	if ( remList[0].isalpha() ):
@@ -111,9 +165,21 @@ def consume_atom(remList):
 		return 1, remList, atom
 	return 0, remList, None
 
-# consume negation symbol and return remaining list
+#-------------------------------------------------------------------------------------------#
 
 def consume_negation(remList):
+	'''Consume atom.
+
+	Args:
+      remlist (list): List of symbols that make up sentence  (chars).
+
+    Returns:
+      bool: True if '~' consumed, False otherwise.
+      list: Remainder list after consuming atom.
+      char: '~' to build parse tree.
+
+	'''
+
 	if (len(remList) == 0):
 		return 0, remList, None
 	if ( remList[0] == '~' ):
@@ -122,10 +188,11 @@ def consume_negation(remList):
 		return 1, remList, negation
 	return 0, remList, None
 
-
-# consume an open bracket '(' and return remaining list
+#-------------------------------------------------------------------------------------------#
 
 def consume_open_bracket(remList):
+	''' Similar to previous operators. '''
+
 	if (len(remList) == 0):
 		return 0, remList
 	if ( remList[0] == '(' ):
@@ -133,9 +200,11 @@ def consume_open_bracket(remList):
 		return 1, remList
 	return 0, remList
 
-# consume closing bracket ')' and  return remaining list
+#-------------------------------------------------------------------------------------------#
 
 def consume_closing_bracket(remList):
+	''' Similar to previous operators. '''
+
 	if (len(remList) == 0):
 		return 0, remList
 	if (remList[0] == ')' ):
@@ -143,9 +212,11 @@ def consume_closing_bracket(remList):
 		return 1, remList
 	return 0, remList
 
-# consume an operator and return remaining list
+#-------------------------------------------------------------------------------------------#
 
 def consume_operator(remList):
+	''' Similar to previous operators except operator is returned. '''
+
 	if (len(remList) == 0):
 		return 0, remList, None
 	#and, or
@@ -169,17 +240,25 @@ def consume_operator(remList):
 	return 0, remList, None
 
 #-------------------------------------------------------------------------------------------#
-#main function to check if formula is valid
-#returns tuple of 4 items (is_formula, remList, depth, parseTree)
-#is_formula = 1 if valid wff , 0 otherwise
-#remList = remaining list after consumption
-#depth = max. depth of parsetree
-#parseTree =  the parseTree as list of tuples
+#main function
 #-------------------------------------------------------------------------------------------#
 
-def parseWFF(exp):
+def parse_wff(exp):
+	'''Parse a string and check if wff and build parse tree.
+
+	Args:
+      exp: String to be checked if wff.
+
+    Returns:
+      bool: True if wff, False otherwise.
+      list: Remainder list after consumption according to grammar rules.
+      int:  Maximum depth of parse tree.
+      tuple-list: First item of tuple is depth, second is terminal symbol.
+      list: Input string 'exp' represented as list so it can be used by other modules.
+
+	'''
 	exp = exp.lower()
-	remList = stringToCharList(exp)
+	remList = str_to_char_list(exp)
 	symList = list(remList)
 	startDepth = 0
 	parseTree = []
@@ -188,15 +267,6 @@ def parseWFF(exp):
 		return is_formula, remList, depth, parseTree, symList
 	return 0, remList, depth, parseTree, symList
 
-#program execution starts here
-
-# exp = raw_input('Enter sentence:')
-# #exp = 'a & b'
-# print '\nChecking expression: %s ' %exp
-# if (parseWFF(exp)[0]):
-# 	print('valid')
-# else:
-# 	print('invalid')
 
 
 
