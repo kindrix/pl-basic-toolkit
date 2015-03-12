@@ -4,9 +4,10 @@
 # Author: Kinzang Chhogyal
 # Email: kindrix@gmail.com
 #
-#Module to check if a given sentence is a well formed forumal (wff) of propostional logic
-#The program is based on the idea of using difference lists used for DCG in Prolog (It may be used in in other languages as well.) More information can 
-#be found at http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse28.
+# Checks if a formula is a well formed formula of propositional logic.
+# Based on DCG in Prolog using difference lists.
+# More information about DCG and Prolog at 
+# http://www.learnprolognow.org/lpnpage.php?pagetype=html&pageid=lpn-htmlse28.
 
 #The following are the wff rules that I've used:
 
@@ -26,8 +27,9 @@
 
 #-------------------------------------------------------------------------------------------#
 
-
+#-------------------------------------------------------------------------------------------#
 #return list of chars and also remove spaces
+#-------------------------------------------------------------------------------------------#
 def stringToCharList(exp):
 	charList = []
 	for char in exp:
@@ -36,146 +38,137 @@ def stringToCharList(exp):
 	return charList
 
 
+#-------------------------------------------------------------------------------------------#
 # recursive definition of a wff
+#-------------------------------------------------------------------------------------------#
 
-def consume_formula(symList):
-	#symListCopy = list(symList)
-	#print 'current list:', symList
+def consume_formula(remList):
+	#remListCopy = list(remList)
+	#print 'current list:', remList
 
 	#cosume an atom
 	#formula: atom
 
-	is_atom, symList = consume_atom(symList)
+	is_atom, remList = consume_atom(remList)
 	if is_atom:
-		return 1, symList
+		return 1, remList
 
 
 	#consume negation followed by formula
 	#formula: ~ formula
 
-	is_negation, symList = consume_negation(symList)
+	is_negation, remList = consume_negation(remList)
 	if is_negation:
-		is_formula, symList = consume_formula(symList)
+		is_formula, remList = consume_formula(remList)
 		if is_formula:
-			return 1, symList
+			return 1, remList
 
 
 	#consume an opening bracket followed by a formula, operator and a closing bracket
 	#formula: (formula operator formula)
 
-	is_open_bracket, symList = consume_open_bracket(symList)
+	is_open_bracket, remList = consume_open_bracket(remList)
 	if is_open_bracket:
-		is_formula, symList = consume_formula(symList)
+		is_formula, remList = consume_formula(remList)
 		if is_formula:
-			is_operator, symList = consume_operator(symList)
+			is_operator, remList = consume_operator(remList)
 			if is_operator:
-				is_formula, symList = consume_formula(symList)
+				is_formula, remList = consume_formula(remList)
 				if is_formula:
-					is_closing_bracket, symList = consume_closing_bracket(symList)
+					is_closing_bracket, remList = consume_closing_bracket(remList)
 					if is_closing_bracket:
-						return 1, symList
-	# 				else:
-	# 					return 0, symList
-	# 			else:
-	# 				return 0, symList
-	# 		else:
-	# 			return 0, symList
-	# 	else:
-	# 		return 0, symList
-	# else:
-	# 	return 0, symList
-
-	
+						return 1, remList
 	#all rules fails
-	return 0, symList
+	return 0, remList
 
 
 # consume an atom and return remaining list
 
-def consume_atom(symList):
-	if (len(symList) == 0):
-		return 0, symList
-	if ( symList[0].isalpha() ):
-		symList.remove(symList[0])
-		return 1, symList
-	return 0, symList
+def consume_atom(remList):
+	if (len(remList) == 0):
+		return 0, remList
+	if ( remList[0].isalpha() ):
+		remList.remove(remList[0])
+		return 1, remList
+	return 0, remList
 
 # consume negation symbol and return remaining list
 
-def consume_negation(symList):
-	if (len(symList) == 0):
-		return 0, symList
-	if ( symList[0] == '~' ):
-		symList.remove(symList[0])
-		return 1, symList
-	return 0, symList
+def consume_negation(remList):
+	if (len(remList) == 0):
+		return 0, remList
+	if ( remList[0] == '~' ):
+		remList.remove(remList[0])
+		return 1, remList
+	return 0, remList
 
 
 # consume an open bracket '(' and return remaining list
 
-def consume_open_bracket(symList):
-	if (len(symList) == 0):
-		return 0, symList
-	if ( symList[0] == '(' ):
-		symList.remove(symList[0])
-		return 1, symList
-	return 0, symList
+def consume_open_bracket(remList):
+	if (len(remList) == 0):
+		return 0, remList
+	if ( remList[0] == '(' ):
+		remList.remove(remList[0])
+		return 1, remList
+	return 0, remList
 
 # consume closing bracket ')' and  return remaining list
 
-def consume_closing_bracket(symList):
-	if (len(symList) == 0):
-		return 0, symList
-	if (symList[0] == ')' ):
-		symList.remove(symList[0])
-		return 1, symList
-	return 0, symList
+def consume_closing_bracket(remList):
+	if (len(remList) == 0):
+		return 0, remList
+	if (remList[0] == ')' ):
+		remList.remove(remList[0])
+		return 1, remList
+	return 0, remList
 
 # consume an operator and return remaining list
 
-def consume_operator(symList):
-	if (len(symList) == 0):
-		return 0, symList
+def consume_operator(remList):
+	if (len(remList) == 0):
+		return 0, remList
 	#and, or
-	if ( symList[0] in ['&', '|']  ):
-		symList.remove(symList[0])
-		return 1, symList
+	if ( remList[0] in ['&', '|']  ):
+		remList.remove(remList[0])
+		return 1, remList
 	#implication
-	elif (symList[0] == '-' and symList[1] == '>'):
-		symList.remove(symList[0])
-		symList.remove(symList[0])
-		return 1, symList
+	elif (remList[0] == '-' and remList[1] == '>'):
+		remList.remove(remList[0])
+		remList.remove(remList[0])
+		return 1, remList
 	#biconditional
-	elif (symList[0] == '<' and symList[1] == '-' and symList[2] == '>'):
-		symList.remove(symList[0])
-		symList.remove(symList[0])
-		symList.remove(symList[0])
-		return 1, symList
-	return 0, symList
+	elif (remList[0] == '<' and remList[1] == '-' and remList[2] == '>'):
+		remList.remove(remList[0])
+		remList.remove(remList[0])
+		remList.remove(remList[0])
+		return 1, remList
+	return 0, remList
 
 
+#-------------------------------------------------------------------------------------------#
 #main function to check if formula is valid
 #returns 1 if valid , 0 otherwise
+#-------------------------------------------------------------------------------------------#
 
-def checkValidFormula(symList):
-	is_formula, symList = consume_formula(symList)
-	print 'Final after consumption:', symList
-	if (is_formula and len(symList) == 0):
-		return 1
-	return 0
+def checkWFF(exp):
+	exp = exp.lower()
+	remList = stringToCharList(exp)
+	symList = list(remList)
+	is_formula, remList = consume_formula(remList)
+	if (is_formula and len(remList) == 0):
+		return is_formula, symList
+	return 0, symList
 
-#program execution starts here
+# #program execution starts here
 
-exp = raw_input('Enter sentence:')
-#exp = 'a & b'
-expList = stringToCharList(exp)
-print '\nChecking expression: %s ' %exp
-print 'List representation: %s' % expList
-
-if checkValidFormula(expList):
-	print('valid')
-else:
-	print('invalid')
+# exp = raw_input('Enter sentence:')
+# #exp = 'a & b'
+# print '\nChecking expression: %s ' %exp
+# if checkWFF(exp):
+# 	print('valid')
+# else:
+# 	print('invalid')
 
 
 

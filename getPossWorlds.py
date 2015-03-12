@@ -44,7 +44,7 @@ def generateIntialRow(alphabet):
 
 # main function to generate possible worlds give an alphabet (a..z)
 
-def generatePossibleWorlds(alphabet):
+def getPossWorlds(alphabet):
 
 	#table of possible worlds
 	possibleWorldsTable =[]
@@ -71,7 +71,6 @@ def generatePossibleWorlds(alphabet):
 	#possible worlds represented as dictionary
 	return possibleWorldsTable
 
-#print 'possible worlds:', generatePossibleWorlds(['a', 'b'])
 
 
 

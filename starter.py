@@ -2,7 +2,7 @@
 
 #import wffModule
 
-import wffParserPropLogic
+import parseTreePL
 import getTruthTable
 
 
@@ -42,7 +42,7 @@ def displayTruthTable(alphabet, sentence, possibleWorldsTable, truthValues):
 exp = raw_input('Enter sentence: ')
 
 #check if exp is wff and return parse tree
-parserResult = wffParserPropLogic.parseWFF(exp)
+parserResult = parseTreePL.parseWFF(exp)
 
 
 

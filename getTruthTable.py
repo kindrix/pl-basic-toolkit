@@ -2,8 +2,8 @@
 
 #import wffModule
 
-import wffParserPropLogic
-import generatePossibleWorlds
+import parseTreePL
+import getPossWorlds
 
 
 #-------------------------------------------------------------------------------------------#
@@ -73,7 +73,7 @@ def evaluateParseTree(parseTree, depth, possibleWorld):
 def getTruthTable(result, alphabet):
 
 	# #check if exp is wff and return parse tree
-	# result = wffParserPropLogic.parseWFF(exp)
+	# result = parseTreePL.parseWFF(exp)
 	# print 'result:', result
 	#if (result[0]):
 
@@ -82,7 +82,7 @@ def getTruthTable(result, alphabet):
 	#alphabet.sort()
 
 	#generate possible worlds
-	possibleWorldsTable = generatePossibleWorlds.generatePossibleWorlds(alphabet)
+	possibleWorldsTable = getPossWorlds.getPossWorlds(alphabet)
 
 	print '\nFormula is valid'
 	print 'symlist: ', result[1]
