@@ -1,6 +1,26 @@
 #!/usr/bin/python
 '''
-Starter file to test wff-pl-module.
+Starter file to test plBasicToolkit module.
+
+If you want to use the module from a file outside the module directory, 
+please use:
+	>>> import plBasicToolkit 
+
+	To use the modules, then call as follows:
+
+	Parser:
+		>>> plBasicToolkit.parse_wff(exp)
+
+		The above example takes an string and checks if it is a valid wff and returns the parse tree.
+
+	Truth table builder
+
+		>>> plBasicToolkit.get_truth_table(parseTree, alphabet)
+
+		The  above example takes the parseTree (from parse_wff module above) along with the alphabet
+		of the language and returns the truth table.
+
+
 
 Author:
 	kinzang chhogyal (kindrix@gmail.com)
