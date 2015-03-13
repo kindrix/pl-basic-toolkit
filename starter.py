@@ -6,15 +6,12 @@ Author:
 	kinzang chhogyal (kindrix@gmail.com)
 '''
 
-#import wffModule
-
 import parser
+import worlds 
 import ttable
 
 
-#-------------------------------------------------------------------------------------------#
 # find alphabet given formula
-#-------------------------------------------------------------------------------------------#
 
 def get_alphabet(symList):
 
@@ -71,6 +68,7 @@ if (parserResult[0]):
 	print '\nMax depth of parse tree: ', parserResult[2]
 
 	# #display truth table
+
 	show_truth_table(alphabet, ''.join(parserResult[4]), possibleWorldsTable, truthValues)
 
 else:
