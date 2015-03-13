@@ -2,6 +2,8 @@
 Some tools for propositional logic that includes a wff checker, a parse tree builder and a model builder. 
 
 -----------------------------------------------------------------------------
+Content
+-----------------------------------------------------------------------------
 
 There are 5 files:
 
@@ -30,6 +32,8 @@ sentence.
 
 -----------------------------------------------------------------------------
 Importing the package
+-----------------------------------------------------------------------------
+
 
 Usage:
 	>>> import plBasicToolkit
@@ -49,6 +53,9 @@ Usage:
 		of the language and returns the truth table. See documentation ttable module for details. 
 
 -----------------------------------------------------------------------------
+Quick Start
+-----------------------------------------------------------------------------
+Download the zip file using the link in github. Unzip and navigate to the folder.
 
 Start with the starter.py.
 
