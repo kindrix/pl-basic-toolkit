@@ -1,4 +1,4 @@
-# pl-basic-toolkit
+# plBasicToolkit
 Some tools for propositional logic that includes a wff checker, a parse tree builder and a model builder. 
 
 -----------------------------------------------------------------------------
@@ -27,6 +27,26 @@ sentence.
 - The starter.py file is just there to demonstrate how the other modules are to be used.
 
 * Note: The wff.py is redundant as its functionlaity is covered by parser.py.
+
+-----------------------------------------------------------------------------
+Importing the package
+
+Usage:
+	>>> import plBasicToolkit
+
+	To use the modules, then call as follows:
+
+	Parser:
+		>>> plBasicToolkit.parse_wff(exp)
+
+		The above example takes an string 'exp' and checks if it is a valid wff and returns the parse tree. See parser module for details
+
+	Truth table builder
+
+		>>> plBasicToolkit.get_truth_table(parseTree, alphabet)
+
+		The  above example takes the parseTree (from parse_wff module above) along with the alphabet
+		of the language and returns the truth table. See documentation ttable module for details. 
 
 -----------------------------------------------------------------------------
 
