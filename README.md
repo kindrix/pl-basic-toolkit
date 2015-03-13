@@ -43,14 +43,16 @@ Usage:
 	Parser:
 		>>> plBasicToolkit.parse_wff(exp)
 
-		The above example takes an string 'exp' and checks if it is a valid wff and returns the parse tree. See parser module for details
+		The above example takes an string 'exp' and checks if it is a 
+		valid wff and returns the parse tree. See 'parser' module for details
 
 	Truth table builder
 
 		>>> plBasicToolkit.get_truth_table(parseTree, alphabet)
 
-		The  above example takes the parseTree (from parse_wff module above) along with the alphabet
-		of the language and returns the truth table. See documentation ttable module for details. 
+		The  above example takes the parseTree (from parse_wff module above) along 
+		with the alphabet of the language and returns the truth table. See documentation 
+		'ttable' module for details. 
 
 -----------------------------------------------------------------------------
 Quick Start
