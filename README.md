@@ -1,6 +1,9 @@
 # plBasicToolkit
 Some tools for propositional logic that includes a wff checker, a parse tree builder and a model builder. 
 
+Demo
+ http://pl-basic-tools.herokuapp.com/
+
 -----------------------------------------------------------------------------
 Content
 -----------------------------------------------------------------------------
